@@ -25,7 +25,7 @@ Aplikasi ini memungkinkan pengguna untuk memilih berbagai mobil listrik berdasar
 Clone repository ini ke komputer lokal Anda dengan perintah berikut:
 
 ```bash
-git clone https://github.com/username/spk-saw-rekomendasi-mobil-listrik.git
+git clone https://github.com/Hanzo080501/SPKSAW.git
 ```
 
 ### 2. **Setup Backend (Laravel 11)**
