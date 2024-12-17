@@ -23,7 +23,7 @@ class ProsesPerhitungan extends Page
     {
         // Mengambil data dari controller
         $sawController = new SAWController();
-        $data = $sawController->calculateSAW(); // Langsung panggil method tanpa perlu ->getData(true)
+        $data = $sawController->calculateSAW();
 
         // Assign data ke properti
         $this->cars = $data['cars'];

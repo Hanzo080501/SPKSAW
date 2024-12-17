@@ -33,14 +33,10 @@ class PenilaianAlternatifResource extends Resource
                     ->options(Car::all()->pluck('name', 'id'))
                     ->required(),
 
-                // Repeater::make('kriterias')
-                //     ->label('Kriteria')
-                //     ->schema([
                 Select::make('kriteria_id')
                     ->label('Kriteria')
                     ->options(Kriteria::all()->pluck('nama_kriteria', 'id'))
-                    ->required()
-                    ->afterStateUpdated(fn(callable $set) => $set('nilai', null)),
+                    ->required(),
                 Select::make('nilai')
                     ->label('Nilai')
                     ->options([
@@ -51,7 +47,6 @@ class PenilaianAlternatifResource extends Resource
                         '5' => '5',
                     ])
                     ->required(),
-                // ])
             ])
             ->columns(2);
     }
