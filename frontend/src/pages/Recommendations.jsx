@@ -26,7 +26,7 @@ function Recommendations() {
           transition={{ duration: 0.5 }}>
           <h1 className="mb-8 text-4xl font-bold">Electric Car Recommendations</h1>
         </motion.div>
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div>
           {cars.map((car) => (
             <CarCard key={car.id} car={car} />
           ))}

@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { fetchCars } from '../api/Api';
+import { SearchFilterContext } from '../context/SearchFilterContext';
 
 function CarCard() {
   const navigate = useNavigate();
+  const { searchQuery, selectedPriceRange } = useContext(SearchFilterContext);
 
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,8 +15,7 @@ function CarCard() {
   useEffect(() => {
     fetchCars()
       .then((data) => {
-        console.log(data);
-        setCars(data);
+        setCars(data.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -23,12 +24,40 @@ function CarCard() {
       });
   }, []);
 
+  // Filter berdasarkan pencarian
+  const searchFilteredCars = cars.filter(
+    (car) =>
+      car.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      car.brand.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Filter berdasarkan harga
+  const priceFilteredCars = searchFilteredCars.filter((car) => {
+    if (selectedPriceRange === 'low') return car.price < 200000000;
+    if (selectedPriceRange === 'mid') return car.price >= 200000000 && car.price <= 500000000;
+    if (selectedPriceRange === 'high') return car.price > 500000000;
+    return true; // Tidak ada filter harga
+  });
+
+  // Sorting dan pemberian ranking
+  const rankedCars = selectedPriceRange
+    ? priceFilteredCars
+        .sort((a, b) => a.price - b.price) // Sortir berdasarkan harga
+        .map((car, index) => ({
+          ...car,
+          ranking: index + 1, // Ranking baru berdasarkan filter harga
+        }))
+    : searchFilteredCars.map((car, index) => ({
+        ...car,
+        ranking: car.ranking || index + 1, // Gunakan ranking asli jika tidak ada filter harga
+      }));
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <>
-      {cars.data.map((car, index) => {
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {rankedCars.map((car, index) => {
         const direction = Math.floor(index / 3) % 2 === 0 ? 1 : -1;
         return (
           <motion.div
@@ -56,19 +85,18 @@ function CarCard() {
                   car.price
                 )}
               </p>
-
               <div className="flex items-center mt-2 space-x-2">
                 <span className="text-sm text-gray-400">{car.range} km range</span>
                 <span className="text-sm text-gray-400">•</span>
                 <span className="text-sm text-gray-400">{car.top_speed} mph top speed</span>
                 <span className="text-sm text-gray-400">•</span>
-                <span className="text-sm text-gray-400">Rangking {car.ranking}</span>
+                <span className="text-sm text-gray-400">Ranking {car.ranking}</span>
               </div>
             </div>
           </motion.div>
         );
       })}
-    </>
+    </div>
   );
 }
 

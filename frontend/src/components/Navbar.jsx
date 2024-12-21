@@ -1,13 +1,16 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { SearchFilterContext } from '../context/SearchFilterContext';
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { searchQuery, setSearchQuery, selectedPriceRange, setSelectedPriceRange } =
+    useContext(SearchFilterContext);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const location = useLocation(); // Dapatkan informasi lokasi saat ini
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
     <motion.nav
@@ -40,6 +43,28 @@ function Navbar() {
               </svg>
             </button>
           </div>
+
+          {/* Search and Filter only for recommendations page */}
+          {location.pathname === '/recommendations' && (
+            <div className="items-center hidden space-x-8 lg:flex">
+              <input
+                type="text"
+                placeholder="Search by name or brand..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-md"
+              />
+              <select
+                value={selectedPriceRange}
+                onChange={(e) => setSelectedPriceRange(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-md">
+                <option value="">All Prices</option>
+                <option value="low">Under 200 juta</option>
+                <option value="mid">200-500 juta</option>
+                <option value="high">Above 500 juta</option>
+              </select>
+            </div>
+          )}
 
           {/* Menu links */}
           <div className="hidden space-x-8 lg:flex">
