@@ -9,14 +9,13 @@ use Illuminate\Support\Facades\Cache;
 
 class SAWController extends Controller
 {
-
     public function calculateSAW()
     {
         return Cache::remember('saw_results', 60, function () {
             $kriterias = Kriteria::all();
             $penilaianAlternatifs = PenilaianAlternatif::with('car', 'kriteria')->get();
 
-            // lookup untuk penilaianAlternatif berdasarkan kriteria_id
+            // Lookup untuk penilaianAlternatif berdasarkan kriteria_id
             $penilaianLookup = $penilaianAlternatifs->groupBy('kriteria_id');
 
             // Matriks Penilaian Alternatif
@@ -33,13 +32,13 @@ class SAWController extends Controller
                 $extremeValue = $kriteria->type === 'benefit' ? $nilaiKriteria->max() : $nilaiKriteria->min();
 
                 if ($extremeValue == 0) {
-                    $extremeValue = 1; // Hindari pembagian dengan nol
+                    $extremeValue = 1;
                 }
 
                 foreach ($penilaianKriteria as $penilaian) {
                     $normalisasi[$penilaian->car_id][$kriteria->id] = $kriteria->type === 'benefit'
-                        ? $penilaian->nilai / $extremeValue
-                        : $extremeValue / $penilaian->nilai;
+                        ? round($penilaian->nilai / $extremeValue, 5)
+                        : round($extremeValue / $penilaian->nilai, 5);
                 }
             }
 
@@ -50,11 +49,12 @@ class SAWController extends Controller
 
                 foreach ($normalisasiKriteria as $kriteriaId => $nilaiNormalisasi) {
                     $bobot = $kriterias->where('id', $kriteriaId)->first()->bobot ?? 0;
-                    $totalPreferensi += $nilaiNormalisasi * $bobot;
+                    $totalPreferensi += round($nilaiNormalisasi * $bobot, 5);
                 }
 
                 $preferensi[$carId] = $totalPreferensi ?: 0;
             }
+
 
             // Ranking berdasarkan preferensi
             arsort($preferensi);
