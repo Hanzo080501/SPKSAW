@@ -18,6 +18,7 @@ class KriteriaResource extends Resource
     protected static ?string $model = Kriteria::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-list-bullet';
+    protected static ?string $pluralLabel = 'Kriteria';
     protected static ?string $navigationGroup = 'Admin Management';
     protected static ?string $navigationLabel = 'Kriteria';
 
