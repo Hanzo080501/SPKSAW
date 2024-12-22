@@ -1,6 +1,6 @@
 <x-filament-panels::page>
     <!-- Tabel Penilaian Alternatif -->
-    <h2 class="mt-6 text-xl font-semibold">Tabel Nilai Alternatif:</h2>
+    <h2 class="mt-6 text-xl font-semibold">Tabel Nilai Kriteria:</h2>
     <div class="mt-4 overflow-x-auto">
         <table class="min-w-full border border-collapse border-gray-300 table-auto">
             <thead class="bg-gray-500">
