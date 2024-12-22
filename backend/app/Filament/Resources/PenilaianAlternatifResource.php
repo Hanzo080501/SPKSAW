@@ -22,6 +22,7 @@ class PenilaianAlternatifResource extends Resource
     protected static ?string $model = PenilaianAlternatif::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calculator';
+    protected static ?string $navigationGroup = 'Admin Management';
     protected static ?string $navigationLabel = 'Penilaian Alternatif';
 
     public static function form(Form $form): Form

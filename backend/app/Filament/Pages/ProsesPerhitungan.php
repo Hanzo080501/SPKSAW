@@ -10,6 +10,7 @@ class ProsesPerhitungan extends Page
     protected static ?string $title = 'Perhitungan SAW';
     protected static ?string $navigationLabel = 'Perhitungan SAW';
     protected static ?string $navigationIcon = 'heroicon-o-calculator';
+    protected static ?string $navigationGroup = 'Admin Management';
     protected static string $view = 'filament.pages.proses-perhitungan';
 
     public $cars;

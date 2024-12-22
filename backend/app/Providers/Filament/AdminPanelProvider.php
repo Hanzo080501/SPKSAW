@@ -26,9 +26,14 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->registration()
+            ->passwordReset()
+            ->profile()
             ->login()
+            ->brandName('ElectricAuto')
             ->colors([
                 'primary' => Color::Amber,
+                'secondary' => Color::Gray,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

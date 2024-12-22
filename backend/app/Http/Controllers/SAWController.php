@@ -37,8 +37,8 @@ class SAWController extends Controller
 
                 foreach ($penilaianKriteria as $penilaian) {
                     $normalisasi[$penilaian->car_id][$kriteria->id] = $kriteria->type === 'benefit'
-                        ? round($penilaian->nilai / $extremeValue, 5)
-                        : round($extremeValue / $penilaian->nilai, 5);
+                        ? round($penilaian->nilai / $extremeValue, 6)
+                        : round($extremeValue / $penilaian->nilai, 6);
                 }
             }
 
@@ -49,7 +49,7 @@ class SAWController extends Controller
 
                 foreach ($normalisasiKriteria as $kriteriaId => $nilaiNormalisasi) {
                     $bobot = $kriterias->where('id', $kriteriaId)->first()->bobot ?? 0;
-                    $totalPreferensi += round($nilaiNormalisasi * $bobot, 5);
+                    $totalPreferensi += round($nilaiNormalisasi * $bobot, 6);
                 }
 
                 $preferensi[$carId] = $totalPreferensi ?: 0;
@@ -62,7 +62,7 @@ class SAWController extends Controller
             $rank = 1;
             foreach ($preferensi as $carId => $score) {
                 $car = Car::find($carId);
-
+                $carIndex = array_search($carId, array_keys($penilaianAlternatifMatrix));
                 if ($car) {
                     // Simpan preferensi dan ranking ke dalam tabel cars
                     $car->update([
@@ -73,7 +73,8 @@ class SAWController extends Controller
 
                 $ranking[] = [
                     'car_id' => $carId,
-                    'car_name' => $car ? $car->name : 'Unknown',
+                    // 'car_name' => $car ? $car->name : 'Unknown',
+                    'car_name' => 'A' . ($carIndex + 1),
                     'score' => $score,
                     'rank' => $rank++,
                 ];

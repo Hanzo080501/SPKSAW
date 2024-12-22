@@ -5,16 +5,16 @@
         <table class="min-w-full border border-collapse border-gray-300 table-auto">
             <thead class="bg-gray-500">
                 <tr>
-                    <th class="px-4 py-2 text-left border border-gray-300">Nama Mobil</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">Alternatif</th>
                     @foreach ($kriterias as $kriteria)
-                        <th class="px-4 py-2 text-left border border-gray-300">{{ $kriteria->nama_kriteria }}</th>
+                        <th class="px-4 py-2 text-left border border-gray-300">{{ $kriteria->kode_kriteria }}</th>
                     @endforeach
                 </tr>
             </thead>
             <tbody>
-                @foreach ($cars as $car)
+                @foreach ($cars as $index => $car)
                     <tr class="odd:bg-white even:bg-gray-50">
-                        <td class="px-4 py-2 border border-gray-300">{{ $car->name }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ 'A' . ($index + 1) }}</td>
                         @foreach ($kriterias as $kriteria)
                             <td class="px-4 py-2 border border-gray-300">
                                 {{ $penilaianAlternatifMatrix[$car->id][$kriteria->id] ?? 'N/A' }}
@@ -32,16 +32,16 @@
         <table class="min-w-full border border-collapse border-gray-300 table-auto">
             <thead class="bg-gray-500">
                 <tr>
-                    <th class="px-4 py-2 text-left border border-gray-300">Nama Mobil</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">Alternatif</th>
                     @foreach ($kriterias as $kriteria)
-                        <th class="px-4 py-2 text-left border border-gray-300">{{ $kriteria->nama_kriteria }}</th>
+                        <th class="px-4 py-2 text-left border border-gray-300">{{ $kriteria->kode_kriteria }}</th>
                     @endforeach
                 </tr>
             </thead>
             <tbody>
-                @foreach ($cars as $car)
+                @foreach ($cars as $index => $car)
                     <tr class="odd:bg-white even:bg-gray-50">
-                        <td class="px-4 py-2 border border-gray-300">{{ $car->name }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ 'A' . ($index + 1) }}</td>
                         @foreach ($kriterias as $kriteria)
                             <td class="px-4 py-2 border border-gray-300">
                                 {{ $normalisasiMatrix[$car->id][$kriteria->id] ?? 'N/A' }}
@@ -59,9 +59,9 @@
         <table class="min-w-full border border-collapse border-gray-300 table-auto">
             <thead class="bg-gray-500">
                 <tr>
-                    <th class="px-4 py-2 text-left border border-gray-300">Nama Mobil</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">Alternatif</th>
                     @foreach ($kriterias as $kriteria)
-                        <th class="px-4 py-2 text-left border border-gray-300">{{ $kriteria->nama_kriteria }}</th>
+                        <th class="px-4 py-2 text-left border border-gray-300">{{ $kriteria->kode_kriteria }}</th>
                     @endforeach
                     <th class="px-4 py-2 text-left border border-gray-300">Hasil</th>
                     <th class="px-4 py-2 text-left border border-gray-300">Rangking</th>
