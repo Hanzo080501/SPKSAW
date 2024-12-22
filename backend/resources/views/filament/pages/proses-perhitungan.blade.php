@@ -54,7 +54,7 @@
     </div>
 
     <!-- Tabel Preferensi dengan Bobot yang Diterapkan pada Matriks R -->
-    <h2 class="mt-6 text-xl font-semibold">Tabel Preferensi:</h2>
+    <h2 class="mt-6 text-xl font-semibold">Tabel Menghitung Nilai Preferensi (V):</h2>
     <div class="mt-4 overflow-x-auto">
         <table class="min-w-full border border-collapse border-gray-300 table-auto">
             <thead class="bg-gray-500">
