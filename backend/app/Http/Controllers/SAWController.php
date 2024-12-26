@@ -12,7 +12,11 @@ class SAWController extends Controller
     public function calculateSAW()
     {
         return Cache::remember('saw_results', 60, function () {
+            // Mengambil data kriteria dan mobil
             $kriterias = Kriteria::all();
+            $cars = Car::all();
+
+            // Mengambil penilaian alternatif dan eager load relasi 'car' dan 'kriteria'
             $penilaianAlternatifs = PenilaianAlternatif::with('car', 'kriteria')->get();
 
             // Lookup untuk penilaianAlternatif berdasarkan kriteria_id
@@ -31,11 +35,11 @@ class SAWController extends Controller
                 $nilaiKriteria = $penilaianKriteria->pluck('nilai');
                 $extremeValue = $kriteria->type === 'benefit' ? $nilaiKriteria->max() : $nilaiKriteria->min();
 
-                if ($extremeValue == 0) {
-                    $extremeValue = 1;
-                }
+                // Cegah pembagian dengan 0
+                $extremeValue = $extremeValue ?: 1;
 
                 foreach ($penilaianKriteria as $penilaian) {
+                    // Pembulatan dengan presisi yang lebih tinggi
                     $normalisasi[$penilaian->car_id][$kriteria->id] = $kriteria->type === 'benefit'
                         ? round($penilaian->nilai / $extremeValue, 6)
                         : round($extremeValue / $penilaian->nilai, 6);
@@ -48,11 +52,13 @@ class SAWController extends Controller
                 $totalPreferensi = 0;
 
                 foreach ($normalisasiKriteria as $kriteriaId => $nilaiNormalisasi) {
-                    $bobot = $kriterias->where('id', $kriteriaId)->first()->bobot ?? 0;
+                    $bobot = $kriterias->firstWhere('id', $kriteriaId)->bobot ?? 0;
                     $totalPreferensi += round($nilaiNormalisasi * $bobot, 6);
                 }
 
+                // Pembulatan akhir dan pastikan format konsisten
                 $preferensi[$carId] = $totalPreferensi ?: 0;
+                // $preferensi[$carId] = number_format($totalPreferensi ?: 0, 6, '.', '');
             }
 
 
@@ -61,10 +67,8 @@ class SAWController extends Controller
             $ranking = [];
             $rank = 1;
             foreach ($preferensi as $carId => $score) {
-                $car = Car::find($carId);
-                $carIndex = array_search($carId, array_keys($penilaianAlternatifMatrix));
+                $car = $cars->find($carId);
                 if ($car) {
-                    // Simpan preferensi dan ranking ke dalam tabel cars
                     $car->update([
                         'preference_score' => $score,
                         'ranking' => $rank,
@@ -73,15 +77,14 @@ class SAWController extends Controller
 
                 $ranking[] = [
                     'car_id' => $carId,
-                    // 'car_name' => $car ? $car->name : 'Unknown',
-                    'car_name' => 'A' . ($carIndex + 1),
+                    'car_name' => $car->name,
                     'score' => $score,
                     'rank' => $rank++,
                 ];
             }
 
             return [
-                'cars' => Car::all(),
+                'cars' => $cars,
                 'kriterias' => $kriterias,
                 'penilaianAlternatifMatrix' => $penilaianAlternatifMatrix,
                 'normalisasiMatrix' => $normalisasi,

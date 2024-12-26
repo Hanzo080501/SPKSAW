@@ -5,10 +5,9 @@ import { SearchFilterContext } from '../context/SearchFilterContext';
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { searchQuery, setSearchQuery, selectedPriceRange, setSelectedPriceRange } =
-    useContext(SearchFilterContext);
+  const { searchQuery, setSearchQuery } = useContext(SearchFilterContext);
 
-  const location = useLocation(); // Dapatkan informasi lokasi saat ini
+  const location = useLocation();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -44,9 +43,9 @@ function Navbar() {
             </button>
           </div>
 
-          {/* Search and Filter only for recommendations page */}
+          {/* Search only for recommendations page */}
           {location.pathname === '/recommendations' && (
-            <div className="items-center hidden space-x-8 lg:flex">
+            <div className="hidden lg:flex">
               <input
                 type="text"
                 placeholder="Search by name or brand..."
@@ -54,15 +53,6 @@ function Navbar() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="px-4 py-2 border border-gray-300 rounded-md"
               />
-              <select
-                value={selectedPriceRange}
-                onChange={(e) => setSelectedPriceRange(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-md">
-                <option value="">All Prices</option>
-                <option value="low">Under 200 juta</option>
-                <option value="mid">200-500 juta</option>
-                <option value="high">Above 500 juta</option>
-              </select>
             </div>
           )}
 
